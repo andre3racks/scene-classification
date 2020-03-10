@@ -10,18 +10,9 @@ def main(data):
     HsofWs = kmeans.hists_of_words(data, 200)
     # NMF model for word / topic relationship
     num_topics = 10
-    model = pLSA.create_NMF(HsofWs['train'], num_topics)
+    doc_topic_matrix = pLSA.create_NMF(HsofWs['train'], num_topics)
 
-    word_dict = {}
-    n_top_words = 1
-    
-    # should print top word for each topic when we run on all data
-    # for i in range(num_topics):
-    #     words_ids = model.components_[i].argsort()[:-n_top_words - 1:-1]
-    #     words = [key for key in words_ids]
-    #     word_dict['Topic # ' + '{:02d}'.format(i+1)] = words
-
-    # print(word_dict)
+    # use DT matrix to find topic assignments to examples; which in essence should be their classification?
 
     return 
 

@@ -3,6 +3,7 @@ import cv2
 from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
 import numpy as np
+import visualVocab
 
 def directory_walk(rootDir):
 
@@ -31,19 +32,27 @@ def directory_walk(rootDir):
 
     return data
 
+# append sift descriptors of example or skip
 def append_example(data, dirName, file, rootDir):
 
     img = cv2.imread(os.path.join(dirName, file), cv2.IMREAD_GRAYSCALE)
-
+    
     if img is None:
         print("Image read failed in data_loader.")
+        return
+    
+    kp, descriptor =  visualVocab.sift.sifty(img)
+
+    if kp is None or descriptor is None:
+        print("Sift failed in data loader.")
+        return
 
     elif 'X_train' in data.keys():
-        data['X_train'].append(img)
+        data['X_train'].append(descriptor)
         data['Y_train'].append(dirName)
 
     else:
-        data['X_train'] = [img]
+        data['X_train'] = [descriptor]
         data['Y_train'] = [dirName]
         # print("init dict")
     

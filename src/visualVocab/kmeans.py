@@ -7,19 +7,25 @@ import cv2
 # input is images
 # returns bag of words for images after fitting for the train images
 def hists_of_words(data, k, max_iter=300, alg='auto'):
+    # flatten descriptors for k means input
+    train_descriptors = np.concatenate(data['X_train'], axis=0)
+    test_descriptors = np.concatenate(data['X_test'], axis=0)
 
-    # use sift file to get descriptors from train and test images
-    train_bags_size, train_descriptors = sift.build_sift_descriptors(data['X_train'])
-    test_bag_size, test_descriptors = sift.build_sift_descriptors(data['X_test'])
-
-    # print("train bag sizes: {}".format(train_bags_size))
+    print("clustering train descriptors...")
     model = KMeans(n_clusters=k, max_iter=max_iter, algorithm=alg)
     # fit model to descriptor data from training examples
     training_cluster_ass = model.fit_predict(train_descriptors)
     # predict X_test desciptors for bag of words
+    print("predicting test descriptors...")
     testing_cluster_ass = model.predict(test_descriptors)
 
-    training_cluster_ass = np.array(training_cluster_ass)
+    train_bags_size = []
+    for bag in data['X_train']:
+        train_bags_size.append(len(bag))
+
+    test_bag_size = []
+    for bag in data['X_test']:
+        test_bag_size.append(len(bag))
 
     bags = {}
     # bags['train'] = training_cluster_ass

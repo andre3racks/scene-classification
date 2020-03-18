@@ -3,25 +3,46 @@ from pLSA import pLSA
 import cv2
 import numpy as np
 from utils import data_loader
+from classification import svm
 
 
 def main(data):
 
     print("reading in data...")
+    # x examples are sift descriptors for images
+    # y labels are scene label strings
+    print("starting descriptor extraction...")
     data = data_loader.directory_walk("./dataset/train")
-    # obtain histogram of words for each image in test and training set
 
-    assert len(data['X_train']) == len(data['Y_train'])
-    assert len(data['X_test']) == len(data['Y_test'])
+    assert len(data['X_train']) == len(data['Y_train']), "len(X_train): {}; len(Y_train): {}".format(len(data['X_train']), len(data['Y_train']))
+    assert len(data['X_test']) == len(data['Y_test']), "len(X_test): {}; len(Y_test): {}".format(len(data['X_test']), len(data['Y_test']))
     
-    print("looks good !!")
+    print("descriptor extraction looks good !!")
 
-    HsofWs = kmeans.hists_of_words(data, 200)
+
+    print("obtaining histogram of words for examples...")
+    # obtain histogram of words for each image in test and training set
+    # obtain data after deletions of any sift failures
+    HsofWs = kmeans.hists_of_words(data, 10, max_iter=3)
+
+    assert len(HsofWs['train']) == len(data['X_train']), "HsofWs['train'] length: {} processed_data['x_train'] length: {}".format(len(HsofWs['train']), len(data['X_train']))
+    assert len(HsofWs['test']) == len(data['X_test'])
+
+    print("factoring pLSA matrix...")
     # NMF model for word / topic relationship
     num_topics = 10
-    doc_topic_matrix = pLSA.create_NMF(HsofWs['train'], num_topics)
-    # use DT matrix to find topic assignments to examples; which in essence should be their classification?
+    data['Z_train'] = pLSA.create_NMF(HsofWs['train'], num_topics)
+    data['Z_test'] = pLSA.create_NMF(HsofWs['test'], num_topics)
+    
+    # doc topic matrix holds Z arrays for each example
+    # Z arrays show an examples relationship to the topics
+    print("training SVM...")
+    # pass Z arrays and labels to SVM for training and testing
+    scores = svm.SVM(data, 5)
 
+    print(scores)
+
+    
     return 
 
 # debug purposes

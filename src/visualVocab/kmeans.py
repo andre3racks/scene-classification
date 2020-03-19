@@ -6,13 +6,17 @@ import cv2
 # generates 'visual words' from the clustering of descriptors
 # input is images
 # returns bag of words for images after fitting for the train images
-def hists_of_words(data, k, max_iter=300, alg='auto'):
+def hists_of_words(data, k, max_iter=300, alg='auto', model=None):
     # flatten descriptors for k means input
     train_descriptors = np.concatenate(data['X_train'], axis=0)
     test_descriptors = np.concatenate(data['X_test'], axis=0)
 
-    print("clustering train descriptors...")
-    model = KMeans(n_clusters=k, max_iter=max_iter, algorithm=alg)
+    if model is None:
+        print("clustering train descriptors...")
+        model = KMeans(n_clusters=k, max_iter=max_iter, algorithm=alg)
+    else:
+        TODO = None
+        # load previously trained model
     # fit model to descriptor data from training examples
     training_cluster_ass = model.fit_predict(train_descriptors)
     # predict X_test desciptors for bag of words

@@ -1,24 +1,51 @@
 import numpy as np
 from sklearn import svm
+from sklearn.metrics import confusion_matrix
 
-def SVM(data, C):
+# can pass in pre-trained models
+def SVM(data, C, model=None):
     
-    model = svm.SVC(C = C)
-    model.fit(data['Z_train'], data['Y_train'])
+    if model is None:
+        model = svm.SVC(C = C)
+        model.fit(data['Z_train'], data['Y_train'])
+    
+    return generate_results(data['Z_test'], data['Y_test'], model)
 
-    scores = {}
-    scores["test"] = model.score(data['Z_test'], data['Y_test'])
-    scores["train"] = model.score(data['Z_train'], data['Y_train'])
 
-    return scores
+def kernel_SVM(data, C, gamma, model=None):
 
-def kernel_SVM(data, C, gamma):
+    if model is None:
+        model = svm.SVC(C=C, kernel='rbf', gamma=gamma)
+        model.fit(data['Z_train'], data['Y_train'])
 
-    model = svm.SVC(C=C, kernel='rbf', gamma=gamma)
-    model.fit(data['Z_train'], data['Y_train'])
+    return generate_results(data['Z_test'], data['Y_test'], model)
 
-    scores = {}
-    scores["test"] = model.score(data['Z_test'], data['Y_test'])
-    scores["train"] = model.score(data['Z_train'], data['Y_train'])
+# taken from a3
+def generate_results(X, y, model):
+    results = {"accuracy" : 0,
+               "recall" : 0,
+               "precision" : 0,
+               "avg_recall" : 0,
+               "avg_precision" : 0,
+               "fscore" : 0}
 
-    return scores
+    pred = model.predict(X)
+
+    print("Creating confusion matrix and calculating evaluation metrics")
+    #Calculate the confusion matrix, and normalize it between 0-1
+    cm = confusion_matrix(y,pred).astype(np.float32)
+    # epsilon for non zero entries
+    EPS=1e-6
+
+    #From the confusion matrix, calculate precision/recall/f1-measure
+    results['recall'] = np.diag(cm) / (np.sum(cm, axis=1) + EPS)
+    results['avg_recall'] = np.mean(results['recall'])
+
+    results['precision'] = np.diag(cm) / (np.sum(cm, axis=0) + EPS)
+    results['avg_precision'] = np.mean(results['precision'])
+
+    results["fscore"] = 2 * ( results['avg_precision'] * results['avg_recall'] ) / (results['avg_precision'] + results['avg_recall'] + EPS)
+
+    results["accuracy"] = np.mean(pred == y)
+
+    return results

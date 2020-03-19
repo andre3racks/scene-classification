@@ -23,7 +23,7 @@ def main(data):
     print("obtaining histogram of words for examples...")
     # obtain histogram of words for each image in test and training set
     # obtain data after deletions of any sift failures
-    HsofWs = kmeans.hists_of_words(data, 10, max_iter=30)
+    HsofWs = kmeans.hists_of_words(data, 10, max_iter=3)
 
     assert len(HsofWs['train']) == len(data['X_train']), "HsofWs['train'] length: {} processed_data['x_train'] length: {}".format(len(HsofWs['train']), len(data['X_train']))
     assert len(HsofWs['test']) == len(data['X_test'])
@@ -38,12 +38,10 @@ def main(data):
     # Z arrays show an examples relationship to the topics
     print("training SVM...")
     # pass Z arrays and labels to SVM for training and testing
-    scores = svm.SVM(data, 5)
+    results = svm.SVM(data, 1)
 
-    print(scores)
+    print(results)
 
-    
-    return 
 
 # debug purposes
 if __name__ == "__main__":

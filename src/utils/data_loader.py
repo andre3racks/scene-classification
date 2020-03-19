@@ -25,9 +25,6 @@ def directory_walk(rootDir):
 
     print("shuffling, ranging, and splitting data.")
 
-    # data['X_train'] = np.array(data['X_train'])
-    # data['X_train'] = data['X_train']/255.
-
     data = split(data)
 
     return data
@@ -36,10 +33,17 @@ def directory_walk(rootDir):
 def append_example(data, dirName, file, rootDir):
 
     img = cv2.imread(os.path.join(dirName, file), cv2.IMREAD_GRAYSCALE)
-    
+
     if img is None:
         print("Image read failed in data_loader.")
         return
+
+    # sift doesn't like normalized images
+    # img = img.astype(np.float32) / 255
+    # img -= img.mean()
+    # img /= img.std()
+
+    # print(img)
     
     kp, descriptor =  visualVocab.sift.sifty(img)
 

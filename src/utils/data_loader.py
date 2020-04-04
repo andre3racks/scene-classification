@@ -19,8 +19,8 @@ def directory_walk(rootDir):
             append_example(data, dirName, file, rootDir)
             num_exs += 1
 
-            if num_exs % 10000 == 0:
-                print("{} image read into data dictionary.".format(num_exs))
+            if num_exs % 1000 == 0:
+                print("{} images read into data dictionary.".format(num_exs))
             None
 
     print("shuffling, ranging, and splitting data.")
@@ -58,7 +58,9 @@ def append_example(data, dirName, file, rootDir):
     else:
         data['X_train'] = [descriptor]
         data['Y_train'] = [dirName]
-        # print("init dict")
+
+    # print("length of descriptor list: {}".format(len(descriptor)))
+    # print("length of keypoint list: {}".format(len(kp)))
     
 
 def split(data):

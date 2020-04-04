@@ -17,6 +17,7 @@ def hists_of_words(data, k, max_iter=300, alg='auto', model=None):
     else:
         TODO = None
         # load previously trained model
+        
     # fit model to descriptor data from training examples
     training_cluster_ass = model.fit_predict(train_descriptors)
     # predict X_test desciptors for bag of words
@@ -50,6 +51,9 @@ def bag_to_histogram(k, bag_sizes, kmeans_output):
         
         for elements in bag:
             hist[elements] += 1
+
+        # normalize hist
+        hist = hist / len(bag)
 
         histograms.append(hist)
         # print(hist)

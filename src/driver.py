@@ -23,14 +23,15 @@ def main(data):
     print("obtaining histogram of words for examples...")
     # obtain histogram of words for each image in test and training set
     # obtain data after deletions of any sift failures
-    HsofWs = kmeans.hists_of_words(data, 10, max_iter=3)
+    num_visual_words = 20
+    HsofWs = kmeans.hists_of_words(data, num_visual_words, max_iter=3)
 
     assert len(HsofWs['train']) == len(data['X_train']), "HsofWs['train'] length: {} processed_data['x_train'] length: {}".format(len(HsofWs['train']), len(data['X_train']))
     assert len(HsofWs['test']) == len(data['X_test'])
 
     print("factoring pLSA matrix...")
     # NMF model for word / topic relationship
-    num_topics = 10
+    num_topics = 15
     data['Z_train'] = pLSA.create_NMF(HsofWs['train'], num_topics)
     data['Z_test'] = pLSA.create_NMF(HsofWs['test'], num_topics)
     
@@ -38,7 +39,7 @@ def main(data):
     # Z arrays show an examples relationship to the topics
     print("training SVM...")
     # pass Z arrays and labels to SVM for training and testing
-    results = svm.SVM(data, 1)
+    results = svm.SVM(data, 0.8)
 
     print(results)
 

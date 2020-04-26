@@ -1,31 +1,42 @@
 import numpy as np
 from sklearn import svm
+from sklearn.svm import SVC
 from sklearn.metrics import confusion_matrix
 import cv2
 import matplotlib.pyplot as plt
 import itertools
 import time
+from sklearn.neighbors import KNeighborsClassifier
 
 # can pass in pre-trained models
 def SVM(data, C, model=None):
     
     if model is None:
-        model = svm.SVC(C = C)
+        model = svm.LinearSVC(C = C)
         model.fit(data['Z_train'], data['Y_train'])
     
-    return generate_results(data['Z_test'], data['Y_test'], model)
+    return generate_results(data['Z_train'], data['Y_train'], model, save=False), generate_results(data['Z_test'], data['Y_test'], model, save=True)
+
+def kernel_SVM(data, C=1, gamma='auto', kernel='rbf', model=None):
+    
+    if model is None:
+        model = SVC(gamma='auto', C=C, kernel=kernel)
+        model.fit(data['Z_train'], data['Y_train'])
+    
+    return generate_results(data['Z_train'], data['Y_train'], model, save=False), generate_results(data['Z_test'], data['Y_test'], model, save=True)
 
 
-def kernel_SVM(data, C, gamma, model=None):
+def KNN(data, N, model=None):
 
     if model is None:
-        model = svm.SVC(C=C, kernel='rbf', gamma=gamma)
+        model = KNeighborsClassifier(n_neighbors=N)
         model.fit(data['Z_train'], data['Y_train'])
+    
+    return generate_results(data['Z_train'], data['Y_train'], model, save=False), generate_results(data['Z_test'], data['Y_test'], model, save=True)
 
-    return generate_results(data['Z_test'], data['Y_test'], model)
 
 # taken from a3
-def generate_results(X, y, model):
+def generate_results(X, y, model, save=False):
     results = {"accuracy" : 0,
                "recall" : 0,
                "precision" : 0,
@@ -34,8 +45,8 @@ def generate_results(X, y, model):
                "fscore" : 0}
 
     pred = model.predict(X)
-
-    print("Creating confusion matrix and calculating evaluation metrics")
+    # print("model prediction: {}".format(pred))
+    # print("Creating confusion matrix and calculating evaluation metrics")
     #Calculate the confusion matrix, and normalize it between 0-1
     cm = confusion_matrix(y,pred).astype(np.float32)
     # epsilon for non zero entries
@@ -52,7 +63,7 @@ def generate_results(X, y, model):
 
     results["accuracy"] = np.mean(pred == y)
 
-    plot_confusion_matrix(cm, save=True)
+    plot_confusion_matrix(cm, save=save)
 
     return results
 
@@ -78,7 +89,7 @@ def plot_confusion_matrix(cm, title="Confusion Matrix", save=True):
     plt.tight_layout()
 
     if save:
-        plt.savefig('confusion_matrix.png'.format(title), bbox_inches='tight')
+        plt.savefig(title.format(title), bbox_inches='tight')
         return
 
 

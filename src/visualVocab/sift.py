@@ -6,7 +6,7 @@ def sifty(image):
 
     sift = cv2.xfeatures2d.SIFT_create()
 
-    step_size = 5
+    step_size = 10
     kp = [cv2.KeyPoint(x, y, step_size) for y in range(0, image.shape[0], step_size) 
                                         for x in range(0, image.shape[1], step_size)]
     # kp, descriptor = sift.detectAndCompute(image,None)

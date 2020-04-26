@@ -58,14 +58,11 @@ def append_example(data, dirName, file, rootDir):
     else:
         data['X_train'] = [descriptor]
         data['Y_train'] = [dirName]
-
-    # print("length of descriptor list: {}".format(len(descriptor)))
-    # print("length of keypoint list: {}".format(len(kp)))
     
 
 def split(data):
     # shuffle data
-    data['X_train'], data['Y_train'] = shuffle(data['X_train'], data['Y_train'])
+    data['X_train'], data['Y_train'] = shuffle(data['X_train'], data['Y_train'])    
 
     # split
     data['X_train'], data['X_test'], data['Y_train'], data['Y_test'] = train_test_split(data['X_train'], data['Y_train'], test_size=0.2, random_state=1)

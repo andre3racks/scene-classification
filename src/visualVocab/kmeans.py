@@ -18,7 +18,7 @@ def hists_of_words(data, k, max_iter=300, alg='auto', model=None, modelname=None
 
     if model is None:
         start = time.time()
-        print("clustering train descriptors...")
+        print("clustering training descriptors...")
         model = KMeans(n_clusters=k, max_iter=max_iter, algorithm=alg)
         
         assert modelname is not None, "modelname is none"
@@ -34,7 +34,8 @@ def hists_of_words(data, k, max_iter=300, alg='auto', model=None, modelname=None
         # load previously trained model
         training_cluster_ass = model.predict(train_descriptors)
         testing_cluster_ass = model.predict(test_descriptors)
-            
+
+    # collect length of word frequencies in original array
     train_bags_size = []
     for bag in data['X_train']:
         train_bags_size.append(len(bag))
@@ -44,7 +45,7 @@ def hists_of_words(data, k, max_iter=300, alg='auto', model=None, modelname=None
         test_bag_size.append(len(bag))
 
     bags = {}
-    # bags['train'] = training_cluster_ass
+    # create histograms from bags
     bags['train'] = bag_to_histogram(k, train_bags_size, training_cluster_ass)
     bags['test'] = bag_to_histogram(k, test_bag_size, testing_cluster_ass)
 
@@ -66,11 +67,7 @@ def bag_to_histogram(k, bag_sizes, kmeans_output):
 
         # normalize hist
         hist = hist / len(bag)
-
-        # print("hist: {}".format(hist))
-
         histograms.append(hist)
-        # print(hist)
 
         last += hist_size
 

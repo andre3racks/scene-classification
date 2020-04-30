@@ -1,0 +1,24 @@
+first iter:
+NVM: 80, topics: 26, acc: 0.525
+NVM: 120, topics: 17, acc: 0.525
+NVM: 100, topics: 23, acc: 0.5375
+NVM: 100, topics: 14, acc: 0.525
+
+second iter:
+best performers
+NVM: 82, topics: 20, acc: 0.5
+NVM: 82, topics: 26, acc: 0.50625
+NVM: 84, topics: 26, acc: 0.51875
+NVM: 76, topics: 23, acc: 0.50625
+
+third iteration:
+NVM: 83, topics: 26, acc: 0.475
+NVM: 84, topics: 20, acc: 0.48125
+NVM: 85, topics: 17, acc: 0.48125
+NVM: 83, topics: 29, acc: 0.48125
+
+best performers
+K: 20, acc: 0.51875
+K: 19, acc: 0.51875
+K: 27, acc: 0.525
+K: 26, acc: 0.55

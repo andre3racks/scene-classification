@@ -45,9 +45,6 @@ def generate_results(X, y, model, save=False):
                "fscore" : 0}
 
     pred = model.predict(X)
-    # print("model prediction: {}".format(pred))
-    # print("Creating confusion matrix and calculating evaluation metrics")
-    #Calculate the confusion matrix, and normalize it between 0-1
     cm = confusion_matrix(y,pred).astype(np.float32)
     # epsilon for non zero entries
     EPS=1e-6

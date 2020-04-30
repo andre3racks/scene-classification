@@ -1,0 +1,8 @@
+{'accuracy': 0.6035714285714285, 
+'recall': array([0.67142856, 0.5833333 , 0.6507937 , 0.52      ], dtype=float32), 
+'precision': array([0.72307694, 0.5       , 0.5394737 , 0.7090909 ], dtype=float32), 
+'avg_recall': 0.6063889, 'avg_precision': 0.6179104, 'fscore': 0.6120949508781501}
+
+best performers
+K: 26, acc: 0.6035714285714285
+

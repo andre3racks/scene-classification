@@ -54,8 +54,6 @@ def main(data, NVM, k_list):
             # obtain doc / topic matrices
             data['Z_train'], data['Z_test'] = pLSA.create_NMF(HsofWs, num_topics_knn)
                         
-            # for k in list_k:
-
             # train and test KNN classifier
             tr_knn, ts_knn = svm.KNN(data, k)
             test_acc.append(ts_knn['accuracy'])
